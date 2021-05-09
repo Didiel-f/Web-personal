@@ -1,26 +1,28 @@
 import React from 'react';
-import { Layout } from 'antd';
+import { Row, Col } from 'antd';
 import { Route, Switch } from 'react-router';
-
+import MenuTop from '../components/Web/MenuTop/MenuTop';
+import Footer from '../components/Web/Footer/Footer';
 
 import "./LayoutBasic.scss";
 
 
 export const LayoutBasic = ({ routes }) => {
-
-    const { Content, Footer } = Layout;
+    // const { routes } = props;
 
     return (
-        <Layout>
-            <h2>Menu....</h2>
-            <Layout>
-                <Content>
-                    <LoadRoutes routes={ routes } />
-                </Content>
-                <Footer> Didiel Figueroa</Footer>
-            </Layout>
-        </Layout>
-    )
+        <>
+            <Row>
+                <Col lg={4} />
+                <Col lg={16}>
+                    <MenuTop />
+                </Col>
+                <Col lg={4} />
+            </Row>
+            <LoadRoutes routes={ routes } />
+            <Footer />
+        </>
+    );
 }
 
 const LoadRoutes = ({ routes }) => {

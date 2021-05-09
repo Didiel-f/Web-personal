@@ -1,9 +1,17 @@
-import React from 'react'
+import React from 'react';
+import HomeCourses from '../components/Web/HomeCourses';
+import MainBanner from '../components/Web/MainBanner';
+import HowMyCoursesWork from '../components/Web/HowMyCoursesWork';
+import ReviewsCourses from '../components/Web/ReviewsCourses';
+
 
 export const Home = () => {
     return (
-        <div>
-            <h1>Estamos en Home</h1>
-        </div>
-    )
-}
+        <>
+        <MainBanner />
+        <HomeCourses />
+        <HowMyCoursesWork />
+        <ReviewsCourses />
+        </>
+    );
+};

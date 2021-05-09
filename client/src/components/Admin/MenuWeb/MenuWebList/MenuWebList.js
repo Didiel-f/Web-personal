@@ -5,7 +5,7 @@ import { Modal } from '../../../Modal/Modal';
 import DragSortableList from 'react-drag-sortable';
 
 import { getAccessTokenApi } from '../../../../api/auth';
-import { activateMenuApi, updateMenuApi } from '../../../../api/menu';
+import { activateMenuApi, deleteMenuApi, updateMenuApi } from '../../../../api/menu';
 import AddMenuWebForm from '../AddMenuWebForm';
 import EditMenuWebForm from '../EditMenuWebForm';
 
@@ -20,11 +20,10 @@ const MenuWebList = ( props ) => {
     const [modalTitle, setModalTitle] = useState("");
     const [modalContent, setModalContent] = useState(null);
 
+    
 
     useEffect(() => {
-
         const listItemsArray = [];
-
         menu.forEach( item => {
             listItemsArray.push({
                 content: (
@@ -32,7 +31,8 @@ const MenuWebList = ( props ) => {
                         item={ item } 
                         activateMenu={ activateMenu } 
                         editMenuWebModal={ editMenuWebModal }
-                        />
+                        deleteMenu={ deleteMenu }
+                    />
                 )
             });
         });
@@ -70,6 +70,32 @@ const MenuWebList = ( props ) => {
         );
     };
 
+    const deleteMenu = (menu) => {
+            const accessToken = getAccessTokenApi();
+    
+            confirm({
+                title: "Eliminando menú",
+                content: `Estás seguro que quieres eliminar el menú ${ menu.title }?`,
+                okText: "Eliminar",
+                okType: "danger",
+                cancelText: "Cancelar",
+                onOk() {
+                    deleteMenuApi( accessToken, menu._id )
+                        .then( response => {
+                            notification["success"]({
+                                message: response
+                            });
+                            setReloadMenuWeb( true );
+                        } )
+                        .catch( err => {
+                            notification["error"]({
+                                message: "Error del servidor, intentelo más tarde."
+                            });
+                        } );
+                }
+            });
+        };
+
     const editMenuWebModal = ( menu ) => {
         setIsVisibleModal( true );
         setModalTitle(`Editando menu: ${ menu.title }`);
@@ -81,6 +107,7 @@ const MenuWebList = ( props ) => {
             />
         );
     };
+
     
     return (
         <div className="menu-web-list">
@@ -105,7 +132,10 @@ const MenuWebList = ( props ) => {
 };
 
 const MenuItem = ( props ) => {
-    const { item, activateMenu, editMenuWebModal } = props;
+    const { item, activateMenu, editMenuWebModal, deleteMenu } = props;
+
+    
+
     
     return (
         <List.Item
@@ -117,7 +147,7 @@ const MenuItem = ( props ) => {
                 <Button type="primary" onClick={ () => editMenuWebModal( item ) } >
                     <Icon type="edit" />
                 </Button>,
-                <Button type="danger">
+                <Button type="danger" onClick={ () => deleteMenu( item ) }>
                     <Icon type="delete" />
                 </Button>
 
